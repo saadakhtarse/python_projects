@@ -1,9 +1,0 @@
-Flask
-pandas
-geopy
-gunicorn
-openpyxl
-requests
-folium
-os
-
