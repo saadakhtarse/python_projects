@@ -106,13 +106,13 @@ def index():
         # Create Map
         if schools:
             m = folium.Map(location=[user_lat, user_lon], zoom_start=12, control_scale=True)
-            folium.Marker([user_lat, user_lon], tooltip="You", icon=folium.Icon(color="green")).add_to(m)
+            folium.Marker([user_lat, user_lon], tooltip="You", icon=folium.Icon(color="green", icon="home")).add_to(m)
 
             for s in schools:
                 folium.Marker(
                     [s["Latitude"], s["Longitude"]],
                     tooltip=f"{s['EstablishmentName']} ({s['distance_miles']} miles)",
-                    icon=folium.Icon(color="red")
+                    icon=folium.Icon(color="red", icon="graduation-cap", prefix='fa')
                 ).add_to(m)
                 folium.PolyLine(
                     [(user_lat, user_lon), (s["Latitude"], s["Longitude"])],
