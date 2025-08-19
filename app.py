@@ -8,11 +8,11 @@ app = Flask(__name__)
 # Load your data
 df = pd.read_excel("data.xlsx")
 
-# Normalize and clean columns
+# Clean and normalize data
 df["Latitude"] = pd.to_numeric(df.get("Latitude", 0), errors="coerce").fillna(0.0)
 df["Longitude"] = pd.to_numeric(df.get("Longitude", 0), errors="coerce").fillna(0.0)
+df["AllSEN"] = df.get("AllSEN", "").fillna("")
 
-# Clean phone numbers
 def clean_phone(v):
     try:
         return str(int(float(str(v).strip())))
@@ -20,14 +20,18 @@ def clean_phone(v):
         return ""
 
 df["TelephoneNum"] = df.get("TelephoneNum", "").apply(clean_phone)
-df["AllSEN"] = df.get("AllSEN", "").fillna("")
 
-# Serve the index.html page
-@app.route("/")
+# Home page route
+@app.route("/", methods=["GET"])
 def home():
     return render_template("index.html")
 
-# API endpoint to find schools (used by script.js)
+# GET fallback for /find-schools (optional, but helps debugging)
+@app.route("/find-schools", methods=["GET"])
+def find_schools_get():
+    return jsonify({"error": "GET method not allowed. Use POST instead."}), 405
+
+# API endpoint for finding schools
 @app.route("/find-schools", methods=["POST"])
 def find_schools():
     try:
@@ -49,7 +53,7 @@ def find_schools():
 
         user_coords = (location_data["latitude"], location_data["longitude"])
 
-        # Compute distance for each school
+        # Compute distances
         nearby_schools = []
         for _, row in df.iterrows():
             try:
@@ -76,7 +80,4 @@ def find_schools():
         return jsonify({"error": str(e)}), 500
 
 if __name__ == "__main__":
-    # app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
-    # app.run(host="0.0.0.0", port=port)
-    # app.run(debug=False, use_reloader=False)
     app.run(host="0.0.0.0", port=5000)
