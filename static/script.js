@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
-    const form = document.querySelector("form");
+    const form = document.querySelector("#schoolForm");
     const resultContainer = document.querySelector(".result-container");
 
     form.addEventListener("submit", async function (e) {
@@ -38,6 +38,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     <h3>${school.EstablishmentName}</h3>
                     <p><strong>Address:</strong> ${school.Address}</p>
                     <p><strong>Postcode:</strong> ${school.Postcode}</p>
+                    <p><strong>Telephone:</strong> ${school.TelephoneNum}</p>
                     <p><strong>Distance:</strong> ${school.distance_km} km</p>
                 `;
                 resultContainer.appendChild(div);
