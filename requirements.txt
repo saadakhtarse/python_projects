@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 Flask
 gunicorn
 pandas
@@ -6,12 +5,3 @@ openpyxl
 requests
 geopy
 folium
-=======
-Flask
-gunicorn
-pandas
-openpyxl
-requests
-geopy
-folium
->>>>>>> ce9fd51e30a515e065478ade6fa314f3117ce799
