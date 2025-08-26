@@ -16,9 +16,13 @@ rename_map = {
     "Gender (name)": "Gender",
     "HeadTitle (name)": "HeadTitle",
     "OfstedRating (name)": "Rating",
+<<<<<<< HEAD
     "EstablishmentTypeGroup (name)": "SchoolType",   # added
 }
 
+=======
+}
+>>>>>>> ce9fd51e30a515e065478ade6fa314f3117ce799
 df.rename(columns={k: v for k, v in rename_map.items() if k in df.columns}, inplace=True)
 
 # Fill missing expected columns
@@ -54,11 +58,16 @@ def index():
         limit = int(request.form.get("limit", 3))
         gender = request.form.get("gender", "").strip()
         ofsted = request.form.get("ofsted", "").strip()
+<<<<<<< HEAD
         school_type = request.form.get("school_type", "").strip()
         school_level = request.form.get("school_level", "").strip()
         sen_raw = request.form.get("sen", "").strip()
 
 
+=======
+        sen_raw = request.form.get("sen", "").strip()
+
+>>>>>>> ce9fd51e30a515e065478ade6fa314f3117ce799
         # Get coordinates using Postcodes.io
         try:
             res = requests.get(f"https://api.postcodes.io/postcodes/{postcode}", timeout=10).json()
@@ -82,6 +91,7 @@ def index():
             allsen = filtered_df["AllSEN"].astype(str).str.lower()
             mask = allsen.apply(lambda txt: any(term in txt for term in terms))
             filtered_df = filtered_df[mask]
+<<<<<<< HEAD
         
         if school_type:
             filtered_df = filtered_df[filtered_df["SchoolType"] == school_type]
@@ -89,6 +99,8 @@ def index():
         if school_level:
             filtered_df = filtered_df[filtered_df["SchoolLevel"] == school_level]
 
+=======
+>>>>>>> ce9fd51e30a515e065478ade6fa314f3117ce799
 
         # Calculate distances
         results = []
@@ -110,9 +122,13 @@ def index():
                 "AllSEN": row.get("AllSEN", ""),
                 "Latitude": lat,
                 "Longitude": lon,
+<<<<<<< HEAD
                 "distance_miles": distance,
                 "SchoolType": row.get("SchoolType", ""),
                 "SchoolLevel": row.get("SchoolLevel", "")
+=======
+                "distance_miles": distance
+>>>>>>> ce9fd51e30a515e065478ade6fa314f3117ce799
             })
 
         schools = sorted(results, key=lambda x: x["distance_miles"])[:limit]
