@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Find Nearby Schools</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+<body>
+    <div class="container">
+        <h1>Find Nearby Schools</h1>
+        <form method="post" id="searchForm">
+            <label>Enter Postcode:</label>
+            <input type="text" name="postcode" value="{{ request.form.postcode or '' }}" required>
+
+            <label>SEN (keywords, comma separated):</label>
+            <input type="text" name="sen" value="{{ request.form.sen or '' }}" placeholder="e.g. ASD, Autistic, Physical, SLD, VI">
+
+            <label>Number of Schools:</label>
+            <input type="number" name="limit" min="1" value="{{ request.form.limit or 3 }}" required>
+
+            <label>Gender:</label>
+            <select name="gender">
+                <option value="">Any</option>
+                <option value="Mixed" {% if request.form.gender == "Mixed" %}selected{% endif %}>Mixed</option>
+                <option value="Boys" {% if request.form.gender == "Boys" %}selected{% endif %}>Boys</option>
+                <option value="Girls" {% if request.form.gender == "Girls" %}selected{% endif %}>Girls</option>
+            </select>
+
+            <label>Rating:</label>
+            <select name="ofsted">
+                <option value="">Any</option>
+                <option value="Outstanding" {% if request.form.ofsted == "Outstanding" %}selected{% endif %}>Outstanding</option>
+                <option value="Good" {% if request.form.ofsted == "Good" %}selected{% endif %}>Good</option>
+                <option value="Requires Improvement" {% if request.form.ofsted == "Requires Improvement" %}selected{% endif %}>Requires Improvement</option>
+                <option value="Inadequate" {% if request.form.ofsted == "Inadequate" %}selected{% endif %}>Inadequate</option>
+            </select>
+
+            <label>School Type:</label>
+            <select name="school_type">
+                <option value="">Any</option>
+                <option value="Academies" {% if request.form.school_type == "Academies" %}selected{% endif %}>Academies</option>
+                <option value="Free Schools" {% if request.form.school_type == "Free Schools" %}selected{% endif %}>Free Schools</option>
+                <option value="Special Schools" {% if request.form.school_type == "Special Schools" %}selected{% endif %}>Special Schools</option>
+            </select>
+
+            <label>School Level:</label>
+            <select name="school_level">
+                <option value="">Any</option>
+                <option value="Nursery" {% if request.form.school_level == "Nursery" %}selected{% endif %}>Nursery</option>
+                <option value="Primary" {% if request.form.school_level == "Primary" %}selected{% endif %}>Primary</option>
+                <option value="Secondary" {% if request.form.school_level == "Secondary" %}selected{% endif %}>Secondary</option>
+            </select>
+
+            <button type="submit">Find Schools</button>
+        </form>
+
+        {% if error %}
+            <div style="color:red; margin-top: 20px;">{{ error }}</div>
+        {% endif %}
+
+        {% if schools %}
+        <div class="result-container" style="display: block;">
+            <h2>Nearby Schools</h2>
+            {% for s in schools %}
+            <div class="school-item">
+                <h3>{{ s['EstablishmentName'] }}</h3>
+                <p><strong>Address:</strong> {{ s['Street'] }}, {{ s['Town'] }}, {{ s['Postcode'] }}</p>
+                <p><strong>Phone:</strong> {{ s['TelephoneNum'] or "Not Mentioned" }}</p>
+                <p><strong>Gender:</strong> {{ s['Gender'] or "Not Mentioned" }}</p>
+                <p><strong>Rating:</strong> {{ s['Rating'] or "Not Mentioned" }}</p>
+                <p><strong>School Type:</strong> {{ s['SchoolType'] or "Not Mentioned" }}</p>
+                <p><strong>School Level:</strong> {{ s['SchoolLevel'] or "Not Mentioned" }}</p>
+                <p><strong>Has Special Classes:</strong> {{ s['HasSpecialClasses'] }}</p>
+                <p><strong>SEN:</strong> {{ s['AllSEN'] or "Not Mentioned" }}</p>
+                <p><strong>Distance:</strong> {{ s['distance_miles'] }} miles</p>
+                <a href="https://www.google.com/maps?q={{ s['Latitude'] }},{{ s['Longitude'] }}" target="_blank" class="btn btn-sm btn-outline-primary">View on Map</a>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="map-container mt-4">
+            {{ map_html|safe }}
+        </div>
+        {% endif %}
+    </div>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
